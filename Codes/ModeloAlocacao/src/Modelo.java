@@ -3,19 +3,22 @@ import ilog.cplex.*;
 
 public class Modelo 
 {
-	public void solveMe()
+	public boolean solveMe(int[] tamanhoBuffer, int[] taxaDeAcessoBuffer, int[] qtdPortasBuffer,
+						int[] capacidadeMemoria, int[] larguraBandaMemoria, int[] qtdPortasMemoria,
+						int qtdBuffers, int qtdMemoria)
 	{
 		//quantidade de buffers
-		int qtdBuffers = 4;
-		int qtdMemoria = 2;
+//		int qtdBuffers = 4;
+//		int qtdMemoria = 2;
 		
-		int[] capacidadeMemoria   = {6,7};
-		int[] larguraBandaMemoria = {80,80};
-		int[] qtdPortasMemoria    = {6,7};
+//		int[] capacidadeMemoria   = {6,7};
+//		int[] larguraBandaMemoria = {80,80};
+//		int[] qtdPortasMemoria    = {6,7};
 		
-		int[] tamanhoBuffer       = {3,3,2,3};
-		int[] taxaDeAcessoBuffer  = {4,2,1,4};
-		int[] qtdPortasBuffer     = {3,2,2,3};
+//		int[] tamanhoBuffer       = {3,3,2,3};
+//		int[] taxaDeAcessoBuffer  = {4,2,1,4};
+//		int[] qtdPortasBuffer     = {3,2,2,3};
+		boolean result = false;
 		
 		try {
 			//definindo o modelo
@@ -63,9 +66,11 @@ public class Modelo
 	        obj.addTerm(1.0, T);
 	        
 	        cplex.addMinimize(obj);
-	        System.out.println(cplex.getAlgorithm());
-	        System.out.println(cplex.getModel());
-	        if(cplex.solve())
+	        // System.out.println(cplex.getAlgorithm());
+	        // System.out.println(cplex.getModel());
+	        result = cplex.solve();
+	        System.out.println(cplex.getCplexTime());
+	        if(result)
 			{
 				System.out.println("obj = "+cplex.getObjValue());
 				//System.out.println("f = "+cplex.getValue(f));
@@ -77,11 +82,13 @@ public class Modelo
 					}
 				}
 			}
+	        else {
+	        	System.out.println("Infeasible");
+	        }
 
 		} catch (IloException e) {
 			e.printStackTrace();
 		}
-		
-	}
-	
+		return result;
+	}	
 }
