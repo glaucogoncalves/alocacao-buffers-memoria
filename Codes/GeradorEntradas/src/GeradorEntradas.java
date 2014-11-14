@@ -40,7 +40,7 @@ public class GeradorEntradas {
 	private static final int[] LB_TIPO = {6553600,13107200};
 	private static final int MIN_NP = 15; 			// menor numero de portas que sera considerado.
 	private static final int MAX_NP = 15; 			// maior numero de portas que sera considerado.
-	private static final int NUM_PROB_DEF = 10;
+	private static final int NUM_PROB_DEF = 100;
 	
 	// caracteristicas possiveis para os buffers
 	private static final int MIN_NB = 5; 			// menor numero de buffers que sera considerado.
@@ -74,7 +74,10 @@ public class GeradorEntradas {
 	public static void main(String args[]) {		
 		int numProblemas = 0; 	// especifica o numero de problemas que serao gerados no arquivo
 		int numBuffers = 0;
-		int numMemorias = 0; 
+		int numMemorias = 0;
+		int somaTamanho = 0;
+		int somaPortas = 0;
+		int somaLarguraBanda = 0;
 
 		GeradorEntradas gerador = new GeradorEntradas();
 		gerador.carregaVetoresPossibilidades();
