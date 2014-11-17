@@ -75,9 +75,15 @@ public class GeradorEntradas {
 		int numProblemas = 0; 	// especifica o numero de problemas que serao gerados no arquivo
 		int numBuffers = 0;
 		int numMemorias = 0;
-		int somaTamanho = 0;
-		int somaPortas = 0;
-		int somaLarguraBanda = 0;
+		int totalTamanhoBuffers = 0;
+		int totalPortasBuffers = 0;
+		int totalLarguraBandaBuffers = 0;
+		
+		int totalCapacidadeMemoria = 0;
+		int totalPortasMemoria = 0;
+		int totalLarguraBandaMemorias = 0;
+		
+		String tempValues = "";
 
 		GeradorEntradas gerador = new GeradorEntradas();
 		gerador.carregaVetoresPossibilidades();
@@ -98,17 +104,53 @@ public class GeradorEntradas {
 			// gera um numero aleatorio de numero de memorias
 			numMemorias = GeradorEntradas.randInt(MIN_NBM, MAX_NBM);
 			// escreve no buffer do arquivo o numero de problemas 
-			gerador.arquivoLinhas.add(numBuffers + ":" + numMemorias);
+			tempValues = numBuffers + ":" + numMemorias + '\n';
 			for (int j = 0; j < numBuffers; j++) {
-				gerador.arquivoLinhas.add(gerador.ptb[GeradorEntradas.randInt(0, (gerador.ptb.length-1))] + ":" +
-										  gerador.pnpb[GeradorEntradas.randInt(0, (gerador.pnpb.length-1))] + ":" +
-										  gerador.pta[GeradorEntradas.randInt(0, (gerador.pta.length-1))]);
+				int tamanhoBuffer = gerador.ptb[GeradorEntradas.randInt(0, (gerador.ptb.length-1))];
+				totalTamanhoBuffers += tamanhoBuffer;
+				tempValues += tamanhoBuffer + ":";
+				int portasBuffer = gerador.pnpb[GeradorEntradas.randInt(0, (gerador.pnpb.length-1))];
+				totalPortasBuffers += portasBuffer;
+				tempValues += portasBuffer + ":";
+				int larguraBandaBuffer = gerador.pta[GeradorEntradas.randInt(0, (gerador.pta.length-1))];
+				totalLarguraBandaBuffers += larguraBandaBuffer;
+				tempValues += portasBuffer + "\n";
 			}
 			for (int j = 0; j < numMemorias; j++) {
-				gerador.arquivoLinhas.add(gerador.pcm[GeradorEntradas.randInt(0, (gerador.pcm.length-1))] + ":" +
-						  				  gerador.pnpm[GeradorEntradas.randInt(0, (gerador.pnpm.length-1))] + ":" +
-						  				  gerador.plb[GeradorEntradas.randInt(0, (gerador.plb.length-1))]);
+				int tamanhoMemoria = gerador.pcm[GeradorEntradas.randInt(0, (gerador.pcm.length-1))];
+				totalCapacidadeMemoria += tamanhoMemoria;
+				tempValues += tamanhoMemoria + ":";
+				int portasMemoria = gerador.pnpm[GeradorEntradas.randInt(0, (gerador.pnpm.length-1))];
+				totalPortasMemoria += portasMemoria;
+				tempValues += portasMemoria + ":";
+				int larguraBandaMemoria = gerador.plb[GeradorEntradas.randInt(0, (gerador.plb.length-1))];
+				totalLarguraBandaMemorias += larguraBandaMemoria;
+				// caso seja a ultima memoria nao coloca o '\n' para nao termos uma linha em branco entre problemas
+				if (j == (numMemorias-1)) {
+					tempValues += larguraBandaMemoria;
+				}
+				else {
+					tempValues += larguraBandaMemoria + "\n";
+				}
 			}
+			// verifica se a soma do tamnho dos buffers, da quantidade de portas e da largura de banda e maior 
+			// que o disponivel em todos os buffers
+			if(totalTamanhoBuffers > totalCapacidadeMemoria || totalPortasBuffers > totalPortasMemoria || 
+			   totalLarguraBandaBuffers > totalLarguraBandaMemorias) {
+				// repete o laco
+				i--;
+			}
+			else {
+				// grava dados gerados nos arquivos
+				gerador.arquivoLinhas.add(tempValues);
+			}
+			totalTamanhoBuffers = 0;
+			totalPortasBuffers = 0;
+			totalLarguraBandaBuffers = 0;
+			totalCapacidadeMemoria = 0;
+			totalPortasMemoria = 0;
+			totalLarguraBandaMemorias = 0;
+			tempValues = "";
 		}
 		try {
 			Files.write(gerador.arquivo, gerador.arquivoLinhas, StandardCharsets.UTF_8);
