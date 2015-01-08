@@ -11,6 +11,7 @@ public class App {
 	public static void main(String[] args) {
 		ArrayList<String> arquivoLinhas = new ArrayList<String>();  		
 		Path arquivo = Paths.get("entrada_buffer.txt");
+		Path resultados = Paths.get("resultados.txt");
 		int numProblemas = 0;
 		int numMemorias = 0;
 		int numBuffers = 0;
@@ -18,6 +19,10 @@ public class App {
 		String[] parts;
 		int infeasibleCnt = 0;
 		boolean result;
+		String categoria = "";
+		double disperdicio = 0;
+		
+		ArrayList<String> resultadoLinha = new ArrayList<String>(); 
 		
 		try {
 			arquivoLinhas = (ArrayList<String>) Files.readAllLines(arquivo, StandardCharsets.UTF_8);
@@ -63,11 +68,19 @@ public class App {
 					  numBuffers, numMemorias);
 			System.out.println("############################# FIM DO PROBLEMA " + (i + 1) + 
 					   		   " #############################");
+			resultadoLinha.add(i + "," + categoria +  "," + disperdicio + "," + m.getFrequencia() + "," + result);
+
 			if(result == false) {
 				infeasibleCnt++;
 			}
 		}
 		System.out.println("total infeasible: " + infeasibleCnt);
+		try {
+			Files.write(resultados, resultadoLinha, StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

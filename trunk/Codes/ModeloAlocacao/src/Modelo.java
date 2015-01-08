@@ -3,6 +3,9 @@ import ilog.cplex.*;
 
 public class Modelo 
 {
+	private double ultimaFrequencia = 0;
+	private double ultimoPeriodo = 0;
+	
 	public boolean solveMe(int[] tamanhoBuffer, int[] taxaDeAcessoBuffer, int[] qtdPortasBuffer,
 						int[] capacidadeMemoria, int[] larguraBandaMemoria, int[] qtdPortasMemoria,
 						int qtdBuffers, int qtdMemoria)
@@ -19,6 +22,7 @@ public class Modelo
 //		int[] taxaDeAcessoBuffer  = {4,2,1,4};
 //		int[] qtdPortasBuffer     = {3,2,2,3};
 		boolean result = false;
+
 		
 		try {
 			//definindo o modelo
@@ -28,7 +32,7 @@ public class Modelo
 	        for(int i = 0; i < qtdBuffers; i++)
 	            x[i] = cplex.boolVarArray(qtdMemoria);
 	        
-	        IloNumVar T = cplex.numVar(0.01,1);
+	        IloNumVar T = cplex.numVar(0.0025,1);
 	        
 	        //primeira equacao
 	        for(int j = 0;j<qtdMemoria;j++)
@@ -73,6 +77,8 @@ public class Modelo
 	        if(result)
 			{
 				System.out.println("obj = "+cplex.getObjValue());
+				ultimoPeriodo = cplex.getObjValue();
+				ultimaFrequencia = 1/ultimoPeriodo;
 				//System.out.println("f = "+cplex.getValue(f));
 				for(int i=0;i<qtdBuffers;i++)
 				{
@@ -91,4 +97,12 @@ public class Modelo
 		}
 		return result;
 	}	
+	
+	public double getFrequencia() {
+		return ultimaFrequencia;
+	}
+	
+	public double getPeriodo() {
+		return ultimoPeriodo;
+	}
 }
