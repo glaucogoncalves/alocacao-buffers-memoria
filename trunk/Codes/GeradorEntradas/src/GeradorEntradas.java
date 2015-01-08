@@ -114,7 +114,7 @@ public class GeradorEntradas {
 				tempValues += portasBuffer + ":";
 				int larguraBandaBuffer = gerador.pta[GeradorEntradas.randInt(0, (gerador.pta.length-1))];
 				totalLarguraBandaBuffers += larguraBandaBuffer;
-				tempValues += portasBuffer + "\n";
+				tempValues += larguraBandaBuffer + "\n";
 			}
 			for (int j = 0; j < numMemorias; j++) {
 				int tamanhoMemoria = gerador.pcm[GeradorEntradas.randInt(0, (gerador.pcm.length-1))];
