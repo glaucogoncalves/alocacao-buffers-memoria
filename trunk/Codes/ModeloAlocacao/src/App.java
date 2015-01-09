@@ -19,8 +19,7 @@ public class App {
 		String[] parts;
 		int infeasibleCnt = 0;
 		boolean result;
-		String categoria = "";
-		double disperdicio = 0;
+		
 		
 		ArrayList<String> resultadoLinha = new ArrayList<String>(); 
 		
@@ -68,7 +67,11 @@ public class App {
 					  numBuffers, numMemorias);
 			System.out.println("############################# FIM DO PROBLEMA " + (i + 1) + 
 					   		   " #############################");
-			resultadoLinha.add(i + "," + categoria +  "," + disperdicio + "," + m.getFrequencia() + "," + result);
+			
+			String catDesp = categorizarEdesperdicio(tamanhoBuffer, taxaDeAcessoBuffer,
+					qtdPortasBuffer, capacidadeMemoria, larguraBandaMemoria, qtdPortasMemoria);
+			//arquivo estruturado: indice, categoria, desperdicio, frequencia, alocou
+			resultadoLinha.add(i + "," + catDesp + "," + m.getFrequencia() + "," + result);
 
 			if(result == false) {
 				infeasibleCnt++;
@@ -81,6 +84,74 @@ public class App {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	public static String categorizarEdesperdicio(int[] tamanhoBuffer, int[] taxaDeAcessoBuffer, int[] qtdPortasBuffer,
+			int[] capacidadeMemoria, int[] larguraBandaMemoria, int[] qtdPortasMemoria)
+	{
+		int tamanhoB = somaValores(tamanhoBuffer); 		//soma todos os tamanhos dos buffers
+		int taxadeaB = somaValores(taxaDeAcessoBuffer); //soma todas as taxas dos buffers
+		int qtdportB = somaValores(qtdPortasBuffer);	//soma todas as quantidades de portas dos buffers
+		int tamanhoM = somaValores(capacidadeMemoria);  //soma todas as capacidades das memorias
+		int taxadeaM = somaValores(larguraBandaMemoria);//soma todas as taxas das memorias
+		int qtdportM = somaValores(qtdPortasMemoria);   //soma todas as quantidades de portas das memorias
+
+		
+		double cap = (double)tamanhoB/tamanhoM;	//proporção das somas das capacidade de memoria e de buffers
+		double tax = (double)taxadeaB/taxadeaM;	//proporção das somas das taxas de memoria e de buffers
+		double por = (double)qtdportB/qtdportM;	//proporção das somas das qts de portas de memoria e de buffers
+		
+		double maiorValor = maiorValor(cap, tax, por);
+		
+		String categoria = getCategoria(maiorValor);  //classifica o problema pela maior proporção
+		
+		double desperdicioCapMemoria = (double) 1-cap; //porcentagem de desperdicio de capacidade de memoria
+		desperdicioCapMemoria = desperdicioCapMemoria*100;
+		String retorno = categoria+","+desperdicioCapMemoria;
+		return retorno;
+	}
+	public static int somaValores(int[] a)
+	{
+	    int total = 0;
+	    for(int i = 0; i < a.length; i++){
+	      total += a[i];  
+	    }
+	    
+	    return total;
+	}
+	public static double maiorValor(double a, double b, double c)
+	{
+		double max = 0.0;
+		if(a>b)
+		{
+			max = a;
+		}
+		else
+		{
+			max = b;
+		}
+		if(c > max)
+		{
+			max = c;
+		}
+		return max;
+	}
+	public static String getCategoria(double valor)
+	{
+		String cat = "";
+		if(valor <= 0.4)
+		{
+			cat = "Facil";
+		}
+		else if(valor > 0.4 && valor <= 0.8)
+		{
+			cat = "Medio";
+		}
+		else if(valor> 0.8)
+		{
+			cat = "Dificil";
+		}
+		
+		return cat;
 	}
 
 }
