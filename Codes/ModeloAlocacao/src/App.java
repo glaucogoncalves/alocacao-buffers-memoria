@@ -71,7 +71,7 @@ public class App {
 			String catDesp = categorizarEdesperdicio(tamanhoBuffer, taxaDeAcessoBuffer,
 					qtdPortasBuffer, capacidadeMemoria, larguraBandaMemoria, qtdPortasMemoria);
 			//arquivo estruturado: indice, categoria, desperdicio, frequencia, alocou
-			resultadoLinha.add(i + "," + catDesp + "," + m.getFrequencia() + "," + result);
+			resultadoLinha.add(i + ":" + catDesp + ":" + String.format( "%.2f", m.getFrequencia()) + ":" + result);
 
 			if(result == false) {
 				infeasibleCnt++;
@@ -96,17 +96,17 @@ public class App {
 		int qtdportM = somaValores(qtdPortasMemoria);   //soma todas as quantidades de portas das memorias
 
 		
-		double cap = (double)tamanhoB/tamanhoM;	//proporção das somas das capacidade de memoria e de buffers
-		double tax = (double)taxadeaB/taxadeaM;	//proporção das somas das taxas de memoria e de buffers
-		double por = (double)qtdportB/qtdportM;	//proporção das somas das qts de portas de memoria e de buffers
+		double cap = (double)tamanhoB/tamanhoM;	//proporcao das somas das capacidade de memoria e de buffers
+		double tax = (double)taxadeaB/taxadeaM;	//proporcao das somas das taxas de memoria e de buffers
+		double por = (double)qtdportB/qtdportM;	//proporcao das somas das qts de portas de memoria e de buffers
 		
 		double maiorValor = maiorValor(cap, tax, por);
 		
-		String categoria = getCategoria(maiorValor);  //classifica o problema pela maior proporção
+		String categoria = getCategoria(maiorValor);  //classifica o problema pela maior proporcao
 		
 		double desperdicioCapMemoria = (double) 1-cap; //porcentagem de desperdicio de capacidade de memoria
 		desperdicioCapMemoria = desperdicioCapMemoria*100;
-		String retorno = categoria+","+desperdicioCapMemoria;
+		String retorno = categoria + ":" + String.format( "%.2f", desperdicioCapMemoria);
 		return retorno;
 	}
 	public static int somaValores(int[] a)
@@ -140,15 +140,15 @@ public class App {
 		String cat = "";
 		if(valor <= 0.4)
 		{
-			cat = "Facil";
+			cat = "f";
 		}
 		else if(valor > 0.4 && valor <= 0.8)
 		{
-			cat = "Medio";
+			cat = "m";
 		}
 		else if(valor> 0.8)
 		{
-			cat = "Dificil";
+			cat = "d";
 		}
 		
 		return cat;

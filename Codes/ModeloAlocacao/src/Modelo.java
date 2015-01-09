@@ -32,7 +32,7 @@ public class Modelo
 	        for(int i = 0; i < qtdBuffers; i++)
 	            x[i] = cplex.boolVarArray(qtdMemoria);
 	        
-	        IloNumVar T = cplex.numVar(0.01,1);
+	        IloNumVar T = cplex.numVar(0.0025,1);
 	        
 	        //primeira equacao
 	        for(int j = 0;j<qtdMemoria;j++)
