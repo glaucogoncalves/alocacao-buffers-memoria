@@ -5,6 +5,8 @@ public class Modelo
 {
 	private double ultimaFrequencia = 0;
 	private double ultimoPeriodo = 0;
+	private double startTime = 0;
+	private double endTime = 0;
 	
 	public boolean solveMe(int[] tamanhoBuffer, int[] taxaDeAcessoBuffer, int[] qtdPortasBuffer,
 						int[] capacidadeMemoria, int[] larguraBandaMemoria, int[] qtdPortasMemoria,
@@ -72,13 +74,15 @@ public class Modelo
 	        cplex.addMinimize(obj);
 	        // System.out.println(cplex.getAlgorithm());
 	        // System.out.println(cplex.getModel());
+	        startTime = cplex.getCplexTime();
 	        result = cplex.solve();
+	        endTime = cplex.getCplexTime();
 	        System.out.println(cplex.getCplexTime());
 	        if(result)
 			{
 				System.out.println("obj = "+cplex.getObjValue());
 				ultimoPeriodo = cplex.getObjValue();
-				ultimaFrequencia = 1/ultimoPeriodo;
+				ultimaFrequencia = 1/ultimoPeriodo;			
 				//System.out.println("f = "+cplex.getValue(f));
 				for(int i=0;i<qtdBuffers;i++)
 				{
@@ -104,5 +108,9 @@ public class Modelo
 	
 	public double getPeriodo() {
 		return ultimoPeriodo;
+	}
+	
+	public double getTime() {
+		return (endTime-startTime);
 	}
 }
