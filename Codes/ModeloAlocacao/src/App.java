@@ -71,7 +71,8 @@ public class App {
 			String catDesp = categorizarEdesperdicio(tamanhoBuffer, taxaDeAcessoBuffer,
 					qtdPortasBuffer, capacidadeMemoria, larguraBandaMemoria, qtdPortasMemoria);
 			//arquivo estruturado: indice, categoria, desperdicio, frequencia, alocou
-			resultadoLinha.add(i + ":" + catDesp + ":" + String.format( "%.2f", m.getFrequencia()) + ":" + result);
+			resultadoLinha.add(i + ":" + catDesp + ":" + String.format( "%.2f", m.getFrequencia()) + ":" + result + 
+							   String.format( "%.3f", m.getTime()));
 
 			if(result == false) {
 				infeasibleCnt++;
