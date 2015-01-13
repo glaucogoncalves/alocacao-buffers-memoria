@@ -10,7 +10,7 @@ public class App {
 
 	public static void main(String[] args) {
 		ArrayList<String> arquivoLinhas = new ArrayList<String>();  		
-		Path arquivo = Paths.get("entrada_buffer.txt");
+		Path arquivo = Paths.get("entrada_buffer_leves.txt");
 		Path resultados = Paths.get("resultados.txt");
 		int numProblemas = 0;
 		int numMemorias = 0;
@@ -64,7 +64,7 @@ public class App {
 			Modelo m = new Modelo();
 			result = m.solveMe(tamanhoBuffer, taxaDeAcessoBuffer, qtdPortasBuffer,
 					  capacidadeMemoria, larguraBandaMemoria, qtdPortasMemoria,
-					  numBuffers, numMemorias);
+					  numBuffers, numMemorias, i);
 			System.out.println("############################# FIM DO PROBLEMA " + (i + 1) + 
 					   		   " #############################");
 			
@@ -72,7 +72,7 @@ public class App {
 					qtdPortasBuffer, capacidadeMemoria, larguraBandaMemoria, qtdPortasMemoria);
 			//arquivo estruturado: indice, categoria, desperdicio, frequencia, alocou
 			resultadoLinha.add(i + ":" + catDesp + ":" + String.format( "%.2f", m.getFrequencia()) + ":" + result + 
-							   String.format( "%.3f", m.getTime()));
+							   ":" + String.format( "%.3f", m.getTime()));
 
 			if(result == false) {
 				infeasibleCnt++;
