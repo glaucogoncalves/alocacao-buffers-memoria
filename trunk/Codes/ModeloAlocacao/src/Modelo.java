@@ -1,3 +1,10 @@
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+
 import ilog.concert.*;
 import ilog.cplex.*;
 
@@ -10,8 +17,10 @@ public class Modelo
 	
 	public boolean solveMe(int[] tamanhoBuffer, int[] taxaDeAcessoBuffer, int[] qtdPortasBuffer,
 						int[] capacidadeMemoria, int[] larguraBandaMemoria, int[] qtdPortasMemoria,
-						int qtdBuffers, int qtdMemoria)
+						int qtdBuffers, int qtdMemoria, int idProblema)
 	{
+		Path arquivoLog = Paths.get("log_problema_leve_" + idProblema + ".txt");
+		ArrayList<String> logLinhas = new ArrayList<String>(); 
 		//quantidade de buffers
 //		int qtdBuffers = 4;
 //		int qtdMemoria = 2;
@@ -78,9 +87,11 @@ public class Modelo
 	        result = cplex.solve();
 	        endTime = cplex.getCplexTime();
 	        System.out.println(cplex.getCplexTime());
+	        logLinhas.add("tempo de execucao(s): " + cplex.getCplexTime());
 	        if(result)
 			{
 				System.out.println("obj = "+cplex.getObjValue());
+				logLinhas.add("obj = "+cplex.getObjValue());
 				ultimoPeriodo = cplex.getObjValue();
 				ultimaFrequencia = 1/ultimoPeriodo;			
 				//System.out.println("f = "+cplex.getValue(f));
@@ -89,14 +100,22 @@ public class Modelo
 					for(int j=0;j<qtdMemoria;j++)
 					{
 						System.out.println("x["+i+"]["+j+"] :"+cplex.getValue(x[i][j]));
+						logLinhas.add("x["+i+"]["+j+"] :"+cplex.getValue(x[i][j]));
 					}
 				}
 			}
 	        else {
 	        	System.out.println("Infeasible");
+	        	logLinhas.add("Infeasible");
 	        }
 
 		} catch (IloException e) {
+			e.printStackTrace();
+		}
+		try {
+			Files.write(arquivoLog, logLinhas, StandardCharsets.UTF_8);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return result;
