@@ -10,7 +10,7 @@ public class App {
 
 	public static void main(String[] args) {
 		ArrayList<String> arquivoLinhas = new ArrayList<String>();  		
-		Path arquivo = Paths.get("entrada_buffer_leves.txt");
+		Path arquivo = Paths.get("entrada_buffer_criticos.txt");
 		Path resultados = Paths.get("resultados.txt");
 		int numProblemas = 0;
 		int numMemorias = 0;

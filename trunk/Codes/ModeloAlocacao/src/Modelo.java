@@ -19,7 +19,7 @@ public class Modelo
 						int[] capacidadeMemoria, int[] larguraBandaMemoria, int[] qtdPortasMemoria,
 						int qtdBuffers, int qtdMemoria, int idProblema)
 	{
-		Path arquivoLog = Paths.get("log_problema_leve_" + idProblema + ".txt");
+		Path arquivoLog = Paths.get("log_problema_pesado_" + idProblema + ".txt");
 		ArrayList<String> logLinhas = new ArrayList<String>(); 
 		//quantidade de buffers
 //		int qtdBuffers = 4;
