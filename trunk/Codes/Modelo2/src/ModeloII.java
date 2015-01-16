@@ -4,6 +4,8 @@ import ilog.cplex.*;
 import java.io.FileWriter; 
 import java.io.IOException; 
 import java.io.PrintWriter; 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner; 
 
 
@@ -16,6 +18,9 @@ public class ModeloII
 	private double frequencia;
 	private double frequenciaReduzida;
 	private double periodoReduzido;
+	private int memoriesDisp;
+	private ArrayList<Integer> listaDeMemoriaEscolhidas = new ArrayList<Integer>();  
+	private int cont = 0;
 	public boolean solveMe(int[] tamanhoBuffer, int[] taxaDeAcessoBuffer, int[] qtdPortasBuffer,
 			int[] capacidadeMemoria, int[] larguraBandaMemoria, int[] qtdPortasMemoria,
 			int qtdBuffers, int qtdMemoria, double periodo)
@@ -32,6 +37,7 @@ public class ModeloII
 		int[] taxaDeAcessoBuffer  = {4,2,1,4};
 		int[] qtdPortasBuffer     = {3,2,2,3};
 		*/
+		
 		
 		//faz a redução do periodo em 10%
 		frequencia = 1/periodo;
@@ -106,20 +112,25 @@ public class ModeloII
 		        gravarArq.printf(result+","+"0"+","+cplex.getCplexTime()+"%n");
 			}
 	        */
-
 	        System.out.println(cplex.getCplexTime());
 	        if(result)
 			{
+	        	
 	        	countMemories = (int)cplex.getObjValue();
 				System.out.println("obj = "+cplex.getObjValue());
-				//System.out.println("f = "+cplex.getValue(f));
-				/*for(int i=0;i<qtdBuffers;i++)
-				{
+				//for(int i=0;i<qtdBuffers;i++)
+				//{
+					
 					for(int j=0;j<qtdMemoria;j++)
 					{
-						System.out.println("x["+i+"]["+j+"] :"+cplex.getValue(x[i][j]));
+						
+						System.out.println(capacidadeMemoria[j]);
+						if(cplex.getValue(y[j])==1)
+						{
+							listaDeMemoriaEscolhidas.add(capacidadeMemoria[j]);
+						}
 					}
-				}*/
+				//}
 			}else
 			{
 				System.out.println("Infeasible");
@@ -137,6 +148,14 @@ public class ModeloII
 	}
 	public double getTime() {
 		return (endTime-startTime);
+	}
+	public int getCountMemoriesDisp()
+	{
+		return memoriesDisp;
+	}
+	public ArrayList<Integer> getListaEscolhida()
+	{
+		return this.listaDeMemoriaEscolhidas;
 	}
 	
 }

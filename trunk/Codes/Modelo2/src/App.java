@@ -78,11 +78,22 @@ public class App {
 					  numBuffers, numMemorias, listaDePeriodos[i]);
 			System.out.println("############################# FIM DO PROBLEMA " + (i + 1) + 
 					   		   " #############################");
-			
-			String catDesp = categorizarEdesperdicio(tamanhoBuffer, taxaDeAcessoBuffer,
-					qtdPortasBuffer, capacidadeMemoria, larguraBandaMemoria, qtdPortasMemoria);
-			//arquivo estruturado: indice, categoria, desperdicio, qtdMemorias, alocou, tempo
-			resultadoLinha.add(i + ":" + catDesp + ":" +  m.getCountMemories() + ":" + result + 
+			String cat = "";
+			String desp = "";
+			if(result)
+			{
+				cat = categorizar(tamanhoBuffer, taxaDeAcessoBuffer, qtdPortasBuffer, capacidadeMemoria,
+					larguraBandaMemoria, qtdPortasMemoria);
+				desp = getDesperdicioArrayList(m.getListaEscolhida(), tamanhoBuffer);
+			}
+			else
+			{
+				cat = categorizar(tamanhoBuffer, taxaDeAcessoBuffer, qtdPortasBuffer, capacidadeMemoria,
+						larguraBandaMemoria, qtdPortasMemoria);
+				desp = getDesperdicio(capacidadeMemoria, tamanhoBuffer);
+			}
+			//arquivo estruturado: indice, categoria, desperdicio, qtdMemoriasDisponiveis, qtdMemoriasUsadas, alocou, tempo
+			resultadoLinha.add(i + ":" + cat + ":" + desp + ":" + numMemorias + ":" + m.getCountMemories() + ":" + result + 
 							   ":" + String.format( "%.3f", m.getTime()));
 			
 			if(result == false) {
@@ -98,7 +109,7 @@ public class App {
 		}
 	}
 
-	public static String categorizarEdesperdicio(int[] tamanhoBuffer, int[] taxaDeAcessoBuffer, int[] qtdPortasBuffer,
+	public static String categorizar(int[] tamanhoBuffer, int[] taxaDeAcessoBuffer, int[] qtdPortasBuffer,
 			int[] capacidadeMemoria, int[] larguraBandaMemoria, int[] qtdPortasMemoria)
 	{
 		int tamanhoB = somaValores(tamanhoBuffer); 		//soma todos os tamanhos dos buffers
@@ -117,15 +128,63 @@ public class App {
 		
 		String categoria = getCategoria(maiorValor);  //classifica o problema pela maior proporcao
 		
+		String retorno = categoria;
+		return retorno;
+	}
+	public static String getDesperdicioArrayList(ArrayList<Integer> capacidadeMemoria, int[] tamanhoBuffer)
+	{
+		String retorno = "";
+		if(capacidadeMemoria.size()>0){
+			int tamanhoB = somaValores(tamanhoBuffer); 		//soma todos os tamanhos dos buffers
+			int tamanhoM = somaValoresArrayList(capacidadeMemoria);  //soma todas as capacidades das memorias
+			//System.out.println(tamanhoM);
+			double cap = (double)tamanhoB/tamanhoM;	//proporcao das somas das capacidade de memoria e de buffers
+					
+			double desperdicioCapMemoria = (double) 1-cap; //porcentagem de desperdicio de capacidade de memoria
+			desperdicioCapMemoria = desperdicioCapMemoria*100;
+			retorno = String.format( "%.2f", desperdicioCapMemoria);
+		}
+		else
+		{
+			retorno = "0.0";
+		}
+		return retorno;
+	}
+	public static String getDesperdicio(int[] capacidadeMemoria, int[] tamanhoBuffer)
+	{
+		int tamanhoB = somaValores(tamanhoBuffer); 		//soma todos os tamanhos dos buffers
+		int tamanhoM = somaValores(capacidadeMemoria);  //soma todas as capacidades das memorias
+
+		double cap = (double)tamanhoB/tamanhoM;	//proporcao das somas das capacidade de memoria e de buffers
+				
 		double desperdicioCapMemoria = (double) 1-cap; //porcentagem de desperdicio de capacidade de memoria
 		desperdicioCapMemoria = desperdicioCapMemoria*100;
-		String retorno = categoria + ":" + String.format( "%.2f", desperdicioCapMemoria);
+		String retorno = String.format( "%.2f", desperdicioCapMemoria);
 		return retorno;
 	}
 	public static int somaValores(int[] a)
 	{
 	    int total = 0;
 	    for(int i = 0; i < a.length; i++){
+	      total += a[i];  
+	    }
+	    
+	    return total;
+	}
+	public static int somaValoresArrayList(ArrayList<Integer> a)
+	{
+	    int total = 0;
+	    for(int i = 0; i < a.size(); i++){
+	      total += a.get(i);  
+	    }
+	    
+	    return total;
+	}
+	
+	public static int somaValoresIndice(int[] a,int indice)
+	{
+	    int total = 0;
+	    for(int i = 0; i < indice; i++){
 	      total += a[i];  
 	    }
 	    
