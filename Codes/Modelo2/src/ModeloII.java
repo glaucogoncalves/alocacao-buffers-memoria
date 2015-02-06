@@ -14,7 +14,7 @@ public class ModeloII
 	private double startTime = 0;
 	private double endTime = 0;
 	private int countMemories = 0;
-	private double taxaDeReducao = 0.1;// 10%
+	private double taxaDeReducao = 0.9;// 10%
 	private double frequencia;
 	private double frequenciaReduzida;
 	private double periodoReduzido;
